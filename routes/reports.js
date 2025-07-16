@@ -1,38 +1,15 @@
 const mongoose = require('mongoose');
 
 const ReportSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  content: {
-    type: String,
-    required: true,
-  },
+  title: { type: String, required: true },
+  content: { type: String, required: true },
   location: {
-    lat: {
-      type: Number,
-      required: true,
-      min: -90,
-      max: 90,
-    },
-    lng: {
-      type: Number,
-      required: true,
-      min: -180,
-      max: 180,
-    }
+    lat: { type: Number, required: true, min: -90, max: 90 },
+    lng: { type: Number, required: true, min: -180, max: 180 }
   },
-  stationName: {
-    type: String,
-  },
-  lineName: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+  stationName: String,
+  lineName: String,
+  createdAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('Report', ReportSchema);

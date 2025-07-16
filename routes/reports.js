@@ -1,36 +1,40 @@
-const express = require('express');
-const router = express.Router();
-const Report = require('../models/Report');
+const mongoose = require('mongoose');
 
-// POST /reports - Add a new report
-router.post('/', async (req, res) => {
-  try {
-    const { title, content } = req.body;
-
-    // ✅ Validation to ensure both fields are present
-    if (!title || !content) {
-      return res.status(400).json({ error: 'Title and content are required.' });
+const ReportSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  content: {
+    type: String,
+    required: true,
+  },
+  location: {
+    lat: {
+      type: Number,
+      required: true,
+      min: -90,
+      max: 90,
+    },
+    lng: {
+      type: Number,
+      required: true,
+      min: -180,
+      max: 180,
     }
-
-    const newReport = new Report({ title, content });
-    await newReport.save();
-
-    res.status(201).json(newReport);
-  } catch (err) {
-    console.error('Error creating report:', err);
-    res.status(400).json({ error: err.message });
+  },
+  stationName: {
+    type: String,
+  },
+  lineName: {
+    type: String,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 
-// GET /reports - List all reports
-router.get('/', async (req, res) => {
-  try {
-    const reports = await Report.find();
-    res.json(reports);
-  } catch (err) {
-    console.error('Error fetching reports:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-module.exports = router;
+module.exports = mongoose.model('Report', ReportSchema);
+// models/Report.js - Mongoose model for reports
+// This file defines the schema for a report and exports the model

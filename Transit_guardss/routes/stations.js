@@ -1,0 +1,117 @@
+// routes/stations.js
+const express = require('express');
+const router = express.Router();
+
+// Replace this with your actual stations data or import from a file
+const stations = [
+  // === A Line (Blue + Gold extension) ===
+  { name: "Downtown Long Beach", line: "A Line", lat: 33.7680, lng: -118.1937 },
+  { name: "Pacific Avenue", line: "A Line", lat: 33.7725, lng: -118.1935 },
+  { name: "5th Street", line: "A Line", lat: 33.7745, lng: -118.1917 },
+  { name: "1st Street", line: "A Line", lat: 33.7755, lng: -118.1900 },
+  { name: "Anaheim Street", line: "A Line", lat: 33.7822, lng: -118.1890 },
+  { name: "Pacific Coast Highway", line: "A Line", lat: 33.7892, lng: -118.1898 },
+  { name: "Willow Street", line: "A Line", lat: 33.8048, lng: -118.1910 },
+  { name: "Wardlow", line: "A Line", lat: 33.8157, lng: -118.1924 },
+  { name: "Del Amo", line: "A Line", lat: 33.8495, lng: -118.1898 },
+  { name: "Artesia", line: "A Line", lat: 33.8767, lng: -118.1890 },
+  { name: "Compton", line: "A Line", lat: 33.8955, lng: -118.2240 },
+  { name: "Willowbrook/Rosa Parks", line: "A Line", lat: 33.9170, lng: -118.2389 },
+  { name: "103rd Street/Watts Towers", line: "A Line", lat: 33.9420, lng: -118.2436 },
+  { name: "Firestone", line: "A Line", lat: 33.9643, lng: -118.2430 },
+  { name: "Florence", line: "A Line", lat: 33.9746, lng: -118.2432 },
+  { name: "Slauson", line: "A Line", lat: 33.9899, lng: -118.2434 },
+  { name: "Vernon", line: "A Line", lat: 34.0031, lng: -118.2425 },
+  { name: "Washington", line: "A Line", lat: 34.0196, lng: -118.2430 },
+  { name: "San Pedro Street", line: "A Line", lat: 34.0320, lng: -118.2682 },
+  { name: "Pico", line: "A Line", lat: 34.0407, lng: -118.2669 },
+  { name: "7th Street/Metro Center", line: "A Line", lat: 34.0486, lng: -118.2585 },
+  { name: "Union Station", line: "A Line", lat: 34.0560, lng: -118.2365 },
+  { name: "Chinatown", line: "A Line", lat: 34.0655, lng: -118.2357 },
+  { name: "Lincoln/Cypress", line: "A Line", lat: 34.0830, lng: -118.2258 },
+  { name: "Heritage Square", line: "A Line", lat: 34.0956, lng: -118.2120 },
+  { name: "Southwest Museum", line: "A Line", lat: 34.1084, lng: -118.2105 },
+  { name: "Highland Park", line: "A Line", lat: 34.1115, lng: -118.1939 },
+  { name: "South Pasadena", line: "A Line", lat: 34.1118, lng: -118.1553 },
+  { name: "Fillmore", line: "A Line", lat: 34.1360, lng: -118.1489 },
+  { name: "Del Mar", line: "A Line", lat: 34.1405, lng: -118.1480 },
+  { name: "Memorial Park", line: "A Line", lat: 34.1476, lng: -118.1445 },
+  { name: "Lake", line: "A Line", lat: 34.1515, lng: -118.1322 },
+  { name: "Allen", line: "A Line", lat: 34.1518, lng: -118.1134 },
+  { name: "Sierra Madre Villa", line: "A Line", lat: 34.1456, lng: -118.0735 },
+  { name: "Arcadia", line: "A Line", lat: 34.1395, lng: -118.0291 },
+  { name: "Monrovia", line: "A Line", lat: 34.1335, lng: -118.0036 },
+  { name: "Duarte/City of Hope", line: "A Line", lat: 34.1292, lng: -117.9689 },
+  { name: "Irwindale", line: "A Line", lat: 34.1282, lng: -117.9357 },
+  { name: "Azusa Downtown", line: "A Line", lat: 34.1339, lng: -117.9076 },
+  { name: "APU/Citrus College", line: "A Line", lat: 34.1342, lng: -117.8892 },
+
+  // === B Line (Red Line) ===
+  { name: "Union Station", line: "B Line", lat: 34.0560, lng: -118.2365 },
+  { name: "Civic Center/Grand Park", line: "B Line", lat: 34.0537, lng: -118.2468 },
+  { name: "Pershing Square", line: "B Line", lat: 34.0479, lng: -118.2496 },
+  { name: "7th Street/Metro Center", line: "B Line", lat: 34.0486, lng: -118.2585 },
+  { name: "Westlake/MacArthur Park", line: "B Line", lat: 34.0560, lng: -118.2762 },
+  { name: "Wilshire/Vermont", line: "B Line", lat: 34.0618, lng: -118.2915 },
+  { name: "Vermont/Beverly", line: "B Line", lat: 34.0761, lng: -118.2916 },
+  { name: "Vermont/Santa Monica", line: "B Line", lat: 34.0905, lng: -118.2918 },
+  { name: "Vermont/Sunset", line: "B Line", lat: 34.0978, lng: -118.2919 },
+  { name: "Hollywood/Western", line: "B Line", lat: 34.1016, lng: -118.3084 },
+  { name: "Hollywood/Vine", line: "B Line", lat: 34.1016, lng: -118.3269 },
+  { name: "Hollywood/Highland", line: "B Line", lat: 34.1016, lng: -118.3387 },
+  { name: "Universal City/Studio City", line: "B Line", lat: 34.1390, lng: -118.3617 },
+  { name: "North Hollywood", line: "B Line", lat: 34.1683, lng: -118.3760 },
+
+  // === C Line (Green Line) ===
+  { name: "Redondo Beach", line: "C Line", lat: 33.8681, lng: -118.3700 },
+  { name: "Douglas", line: "C Line", lat: 33.9160, lng: -118.3834 },
+  { name: "El Segundo", line: "C Line", lat: 33.9290, lng: -118.3867 },
+  { name: "Mariposa", line: "C Line", lat: 33.9169, lng: -118.3866 },
+  { name: "Aviation/LAX", line: "C Line", lat: 33.9294, lng: -118.3796 },
+  { name: "Hawthorne/Lennox", line: "C Line", lat: 33.9297, lng: -118.3525 },
+  { name: "Crenshaw", line: "C Line", lat: 33.9242, lng: -118.3268 },
+  { name: "Vermont/Athens", line: "C Line", lat: 33.9280, lng: -118.2910 },
+  { name: "Harbor Freeway", line: "C Line", lat: 33.9282, lng: -118.2770 },
+  { name: "Avalon", line: "C Line", lat: 33.9285, lng: -118.2653 },
+  { name: "Willowbrook/Rosa Parks", line: "C Line", lat: 33.9170, lng: -118.2389 },
+  { name: "Long Beach Blvd", line: "C Line", lat: 33.9056, lng: -118.2120 },
+  { name: "Lakewood Blvd", line: "C Line", lat: 33.9165, lng: -118.1411 },
+  { name: "Norwalk", line: "C Line", lat: 33.9169, lng: -118.0839 },
+
+  // === D Line (Purple Line) ===
+  { name: "Union Station", line: "D Line", lat: 34.0560, lng: -118.2365 },
+  { name: "Civic Center/Grand Park", line: "D Line", lat: 34.0537, lng: -118.2468 },
+  { name: "Pershing Square", line: "D Line", lat: 34.0479, lng: -118.2496 },
+  { name: "7th Street/Metro Center", line: "D Line", lat: 34.0486, lng: -118.2585 },
+  { name: "Westlake/MacArthur Park", line: "D Line", lat: 34.0560, lng: -118.2762 },
+  { name: "Wilshire/Vermont", line: "D Line", lat: 34.0618, lng: -118.2915 },
+  { name: "Wilshire/Normandie", line: "D Line", lat: 34.0615, lng: -118.3090 },
+  { name: "Wilshire/Western", line: "D Line", lat: 34.0617, lng: -118.3088 },
+
+  // === E Line (Expo Line) ===
+  { name: "Downtown Santa Monica", line: "E Line", lat: 34.0141, lng: -118.4912 },
+  { name: "17th St/SMC", line: "E Line", lat: 34.0230, lng: -118.4815 },
+  { name: "26th St/Bergamot", line: "E Line", lat: 34.0279, lng: -118.4690 },
+  { name: "Expo/Bundy", line: "E Line", lat: 34.0317, lng: -118.4517 },
+  { name: "Expo/Sepulveda", line: "E Line", lat: 34.0317, lng: -118.4374 },
+  { name: "Westwood/Rancho Park", line: "E Line", lat: 34.0371, lng: -118.4292 },
+  { name: "Palms", line: "E Line", lat: 34.0259, lng: -118.4022 },
+  { name: "Culver City", line: "E Line", lat: 34.0274, lng: -118.3881 },
+  { name: "La Cienega/Jefferson", line: "E Line", lat: 34.0294, lng: -118.3761 },
+  { name: "Expo/La Brea", line: "E Line", lat: 34.0232, lng: -118.3520 },
+  { name: "Expo/Crenshaw", line: "E Line", lat: 34.0232, lng: -118.3342 },
+  { name: "Farmdale", line: "E Line", lat: 34.0232, lng: -118.3217 },
+  { name: "Expo/Western", line: "E Line", lat: 34.0232, lng: -118.3084 },
+  { name: "Expo/Vermont", line: "E Line", lat: 34.0232, lng: -118.2919 },
+  { name: "Jefferson/USC", line: "E Line", lat: 34.0240, lng: -118.2840 },
+  { name: "LATTC/Ortho Institute", line: "E Line", lat: 34.0266, lng: -118.2730 },
+  { name: "Pico", line: "E Line", lat: 34.0407, lng: -118.2669 },
+  { name: "7th Street/Metro Center", line: "E Line", lat: 34.0486, lng: -118.2585 }
+];
+
+// GET /stations - returns all stations
+router.get('/', (req, res) => {
+  res.json(stations);
+});
+
+module.exports = router;

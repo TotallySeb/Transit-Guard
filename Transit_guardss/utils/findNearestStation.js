@@ -17,6 +17,7 @@ function findNearestStation(lat, lng) {
   let minDist = Infinity;
 
   stations.forEach(station => {
+    // Access lat and lng directly (not station.coordinates)
     const dist = getDistance(lat, lng, station.lat, station.lng);
     if (dist < minDist) {
       minDist = dist;
@@ -29,4 +30,4 @@ function findNearestStation(lat, lng) {
 
 module.exports = findNearestStation;
 // utils/findNearestStation.js - Utility to find the nearest metro station
-// This file exports a function that takes latitude and longitude and returns the nearest metro station
+// This file exports a function that takes latitude and longitude as input and returns the nearest metro station

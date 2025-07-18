@@ -1,0 +1,22 @@
+{
+  "name": "rag-link-sources",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@huggingface/inference": "^4.5.3",
+    "@langchain/community": "^0.3.49",
+    "@langchain/core": "^0.3.65",
+    "axios": "^1.10.0",
+    "dotenv": "^17.2.0",
+    "langchain": "^0.3.30",
+    "mongodb": "^6.17.0"
+  }
+}

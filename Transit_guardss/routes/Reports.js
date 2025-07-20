@@ -8,11 +8,11 @@ const findNearestStation = require('../utils/findNearestStation');
 // ✅ POST /reports - Add a new report
 router.post('/', async (req, res) => {
   try {
-    const { title, content, threatLevel, location } = req.body;
+    const { category, content, threatLevel, location } = req.body;
 
     // Validation
-    if (!title || !content || !threatLevel) {
-      return res.status(400).json({ error: "Title, content, and threat level are required." });
+    if (!category || !content || !threatLevel) {
+      return res.status(400).json({ error: "Category, content, and threat level are required." });
     }
 
     let stationName = null;
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
 
     // Create and save report
     const newReport = new Report({
-      title,
+      category,
       content,
       threatLevel,
       location,
@@ -71,7 +71,7 @@ router.post('/:id/reply', async (req, res) => {
     report.replies.push(reply);
     await report.save();
 
-    console.log(`🔔 New reply by ${user} on report "${report.title}"`);
+    console.log(`🔔 New reply by ${user} on report "${report.category}"`);
 
     res.status(200).json({ message: "Reply added successfully.", reply });
   } catch (err) {
@@ -128,4 +128,19 @@ router.delete('/:reportId/reply/:replyId', async (req, res) => {
   }
 });
 
+// ✅ GET /reports/:id/replies - Retrieve replies for a report
+router.get('/:id/replies', async (req, res) => {
+  try {
+    const report = await Report.findById(req.params.id);
+    if (!report) {
+      return res.status(404).json({ error: "Report not found." });
+    }
+    res.status(200).json(report.replies || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
+// This code defines the routes for managing reports in a transit system, including creating, listing, replying to, editing, and deleting reports and their replies.
+// It also includes functionality to find the nearest station based on the report's location.

@@ -9,7 +9,7 @@ const replySchema = new mongoose.Schema({
 });
 
 const reportSchema = new mongoose.Schema({
-  title: { type: String, required: [true, 'Title is required'] },
+  category: { type: String, required: [true, 'Category is required'] }, // ✅ changed from 'title' to 'category'
   content: { type: String, required: [true, 'Content is required'] },
   threatLevel: { type: String, required: [true, 'Threat level is required'] },
   location: {
@@ -19,10 +19,8 @@ const reportSchema = new mongoose.Schema({
   stationName: { type: String },
   lineName: { type: String },
   createdAt: { type: Date, default: Date.now },
-  replies: [replySchema] // ✅ add replies array
+  replies: [replySchema] // ✅ replies array remains
 });
 
 const collectionName = process.env.MONGODB_COLLECTION || 'reports';
 module.exports = mongoose.model('Report', reportSchema, collectionName);
-// This code defines a Mongoose schema for reports in a transit system, including fields for title, content, threat level, location, station and line names, and an array of replies.
-// It also sets a default collection name based on an environment variable or defaults to 'reports'.

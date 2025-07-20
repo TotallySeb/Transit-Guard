@@ -2,11 +2,14 @@
 
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const Report = require('../models/Report');
 const findNearestStation = require('../utils/findNearestStation');
+const { sendReportEmail } = require('../utils/email'); // ✅ Import email sender
+const upload = require('../utils/upload'); // ✅ Import multer upload
 
-// ✅ POST /reports - Add a new report
-router.post('/', async (req, res) => {
+// ✅ POST /reports - Add a new report with file uploads
+router.post('/', upload.array('media', 10), async (req, res) => {
   try {
     const { category, content, threatLevel, location } = req.body;
 
@@ -18,28 +21,49 @@ router.post('/', async (req, res) => {
     let stationName = null;
     let lineName = null;
 
-    // Attach nearest station info if location is provided
-    if (location && location.lat && location.lng) {
-      const nearest = findNearestStation(location.lat, location.lng);
+    // Attach nearest station info if location provided
+    let parsedLocation = null;
+    if (location) {
+      try {
+        parsedLocation = JSON.parse(location);
+      } catch {
+        parsedLocation = location; // if already an object
+      }
+    }
+    if (parsedLocation && parsedLocation.lat && parsedLocation.lng) {
+      const nearest = findNearestStation(parsedLocation.lat, parsedLocation.lng);
       if (nearest) {
         stationName = nearest.name;
         lineName = nearest.line;
       }
     }
 
+    // Handle uploaded files
+    const uploadedFiles = req.files ? req.files.map(file => ({
+      filename: file.filename,
+      path: file.path,
+      mimetype: file.mimetype,
+    })) : [];
+
     // Create and save report
     const newReport = new Report({
       category,
       content,
       threatLevel,
-      location,
+      location: parsedLocation || null,
       stationName,
-      lineName
+      lineName,
+      media: uploadedFiles, // ensure your schema supports this
     });
 
     await newReport.save();
+
+    // ✅ Send email notification after saving
+    sendReportEmail(newReport);
+
     res.status(201).json(newReport);
   } catch (err) {
+    console.error(err);
     res.status(400).json({ error: err.message });
   }
 });
@@ -142,5 +166,7 @@ router.get('/:id/replies', async (req, res) => {
 });
 
 module.exports = router;
-// This code defines the routes for managing reports in a transit system, including creating, listing, replying to, editing, and deleting reports and their replies.
-// It also includes functionality to find the nearest station based on the report's location.
+// This code defines the routes for handling reports in an Express application.
+// It includes endpoints for creating, retrieving, updating, and deleting reports and their replies.
+// It also integrates file uploads using Multer and sends email notifications when a new report is created.
+// It uses a Mongoose model to interact with the MongoDB database and includes error handling for various operations.

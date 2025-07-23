@@ -24,9 +24,23 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON
 
+// Serve uploads folder statically at /uploads URL path
+app.use('/uploads', express.static('uploads'));
+
 // Use your routes
 app.use('/reports', reportsRoute);
 app.use('/stations', stationsRoute); // <-- Register stations route
+
+// ✅ Global fallback for unhandled routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// ✅ Global JSON error handler
+app.use((err, req, res, next) => {
+  console.error('🔥 Uncaught server error:', err.stack);
+  res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
+});
 
 // Start the server
 app.listen(PORT, HOST, () => {

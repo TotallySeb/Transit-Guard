@@ -1,7 +1,7 @@
-const nodemailer = require('nodemailer');
-const path = require('path');
+// utils/email.js
+import nodemailer from 'nodemailer';
+import path from 'path';
 
-// Replace these with your real credentials or environment variables
 const EMAIL_USER = process.env.EMAIL_USER || 'transit.guards.app@gmail.com';
 const EMAIL_PASS = process.env.EMAIL_PASS || 'kuvk xkxk plbc qcnx';
 
@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendReportEmail(report) {
+export async function sendReportEmail(report) {
   const { category, content, threatLevel, stationName, lineName, location, media } = report;
 
   // Prepare attachments if media exists
@@ -52,9 +52,3 @@ Please take any necessary action.
     console.error('Error sending email:', err);
   }
 }
-
-module.exports = { sendReportEmail };
-// utils/email.js
-// utils/email.js
-// This file handles sending emails for new reports
-// It uses nodemailer to send emails with report details and attachments

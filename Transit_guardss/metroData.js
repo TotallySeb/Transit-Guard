@@ -1,4 +1,7 @@
-module.exports = [
+// metroData.js - Metro station data
+// This file exports an array of metro stations with their names, lines, and coordinates
+
+const stations = [
   // === A Line (Blue + Gold extension) ===
   { name: "Downtown Long Beach", line: "A Line", lat: 33.7680, lng: -118.1937 },
   { name: "Pacific Avenue", line: "A Line", lat: 33.7725, lng: -118.1935 },
@@ -103,5 +106,5 @@ module.exports = [
   { name: "Pico", line: "E Line", lat: 34.0407, lng: -118.2669 },
   { name: "7th Street/Metro Center", line: "E Line", lat: 34.0486, lng: -118.2585 }
 ];
-// metroData.js - Metro station data
-// This file exports an array of metro stations with their names, lines, and coordinates
+
+export default stations;

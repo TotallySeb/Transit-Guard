@@ -1,6 +1,7 @@
 {
   "name": "transit-guard",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,13 +10,15 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/genai": "^1.11.0",
+    "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "mongoose": "^8.16.4",
     "multer": "^2.0.2",
     "ngrok": "^5.0.0-beta.2",
-    "node": "^20.19.4",
+    "node-fetch": "^2.7.0",
     "nodemailer": "^7.0.5"
   }
 }

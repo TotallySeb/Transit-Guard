@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
+// models/Report.js
+import mongoose from 'mongoose';
 
 const replySchema = new mongoose.Schema({
   user: { type: String, default: 'Anonymous' },
   content: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
 const mediaSchema = new mongoose.Schema({
@@ -13,22 +14,20 @@ const mediaSchema = new mongoose.Schema({
 });
 
 const reportSchema = new mongoose.Schema({
-  category: { type: String, required: [true, 'Category is required'] },
-  content: { type: String, required: [true, 'Content is required'] },
-  threatLevel: { type: String, required: [true, 'Threat level is required'] },
+  category: { type: String, required: true },
+  content: { type: String, required: true },
+  threatLevel: { type: String, required: true },
   location: {
-    lat: { type: Number, min: -90, max: 90 },
-    lng: { type: Number, min: -180, max: 180 }
+    lat: Number,
+    lng: Number,
   },
-  stationName: { type: String },
-  lineName: { type: String },
-  media: [mediaSchema], // <-- Added media field to store uploaded files info
+  stationName: String,
+  lineName: String,
+  media: [mediaSchema],  // Array of uploaded files
+  replies: [replySchema],  // Array of replies
   createdAt: { type: Date, default: Date.now },
-  replies: [replySchema]
 });
 
-const collectionName = process.env.MONGODB_COLLECTION || 'reports';
+const Report = mongoose.model('Report', reportSchema);
 
-module.exports = mongoose.model('Report', reportSchema, collectionName);
-// Report.js - Mongoose model for reports
-// This file defines the schema for reports, including fields for category, content, threat level, location, and media attachments.
+export default Report;

@@ -1,5 +1,6 @@
 // routes/stations.js
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 // Replace this with your actual stations data or import from a file
@@ -114,4 +115,4 @@ router.get('/', (req, res) => {
   res.json(stations);
 });
 
-module.exports = router;
+export default router;

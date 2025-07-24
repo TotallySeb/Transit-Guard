@@ -1,10 +1,11 @@
-const express = require('express');
+import express from 'express';
+import path from 'path';
+import Report from '../models/Report.js';
+import { findNearestStation } from '../utils/findNearestStation.js'; // <-- named import
+import { sendReportEmail } from '../utils/email.js';
+import upload from '../utils/upload.js';
+
 const router = express.Router();
-const path = require('path');
-const Report = require('../models/Report');
-const findNearestStation = require('../utils/findNearestStation');
-const { sendReportEmail } = require('../utils/email');
-const upload = require('../utils/upload');
 
 // ✅ GET /reports - return all reports or only recent reports if ?recentOnly=true
 router.get('/', async (req, res) => {
@@ -124,4 +125,4 @@ router.post('/:id/replies', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

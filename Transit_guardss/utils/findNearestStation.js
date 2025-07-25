@@ -1,4 +1,6 @@
-import stations from '../metroData.js';
+// utils/findNearestStation.js (CommonJS version)
+
+const stations = require('../metroData');
 
 function getDistance(lat1, lng1, lat2, lng2) {
   const toRad = x => x * Math.PI / 180;
@@ -12,12 +14,11 @@ function getDistance(lat1, lng1, lat2, lng2) {
   return R * c; // distance in km
 }
 
-export function findNearestStation(lat, lng) {
+function findNearestStation(lat, lng) {
   let nearest = null;
   let minDist = Infinity;
 
   stations.forEach(station => {
-    // Access lat and lng directly (not station.coordinates)
     const dist = getDistance(lat, lng, station.lat, station.lng);
     if (dist < minDist) {
       minDist = dist;
@@ -27,3 +28,5 @@ export function findNearestStation(lat, lng) {
 
   return nearest;
 }
+
+module.exports = { findNearestStation };

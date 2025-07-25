@@ -1,6 +1,7 @@
-// utils/upload.js
-import multer from 'multer';
-import path from 'path';
+// utils/upload.js (CommonJS version)
+
+const multer = require('multer');
+const path = require('path');
 
 // Set storage engine
 const storage = multer.diskStorage({
@@ -34,4 +35,4 @@ const upload = multer({
   }
 });
 
-export default upload;
+module.exports = upload;

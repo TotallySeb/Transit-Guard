@@ -1,9 +1,11 @@
-import express from 'express';
-import path from 'path';
-import Report from '../models/Report.js';
-import { findNearestStation } from '../utils/findNearestStation.js'; // <-- named import
-import { sendReportEmail } from '../utils/email.js';
-import upload from '../utils/upload.js';
+// routes/Reports.js (CommonJS version)
+
+const express = require('express');
+const path = require('path');
+const Report = require('../models/Report');
+const { findNearestStation } = require('../utils/findNearestStation');
+const { sendReportEmail } = require('../utils/email');
+const upload = require('../utils/upload');
 
 const router = express.Router();
 
@@ -125,4 +127,4 @@ router.post('/:id/replies', async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

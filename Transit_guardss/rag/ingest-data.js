@@ -5,27 +5,52 @@ const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
 const { MongoClient } = require('mongodb');
 const { getEmbedding } = require('./get-embeddings.js');
 const fs = require('fs'); // Correct way to import the 'fs' module in CommonJS
+const path = require('path'); // Correct way to import the 'path' module in CommonJS
 
 async function run() {
     const client = new MongoClient(process.env.ATLAS_CONNECTION_STRING);
 
     try {
         // Save online PDF as a file
-        const rawData = await fetch("https://investors.mongodb.com/node/12236/pdf");
-        const pdfBuffer = await rawData.arrayBuffer();
-        const pdfData = Buffer.from(pdfBuffer);
-        fs.writeFileSync("investor-report.pdf", pdfData);
+        // const rawData = await fetch("https://investors.mongodb.com/node/12236/pdf");
+        // const pdfBuffer = await rawData.arrayBuffer();
+        // const pdfData = Buffer.from(pdfBuffer);
+        // fs.writeFileSync("investor-report.pdf", pdfData);
 
-        const loader = new PDFLoader(`investor-report.pdf`);
-        const data = await loader.load();
+        // const loader = new PDFLoader(`investor-report.pdf`);
+        // const data = await loader.load();
+        const markdowndir = path.join(__dirname, 'markdown');
+        const files = fs.readdirSync(markdowndir).filter(file => file.endsWith('.md')).map(file => path.join(markdowndir, file));
+        console.log(`Found ${files.length} markdown files to process.`);
+        
+        let allDocs = [];
+
+        for (const filePath of files) {
+            try {
+                const filename = path.basename(filePath);
+                console.log(`Processing file: ${filename}`);
+                const content = fs.readFileSync(filename, 'utf8');
+                const doc = {
+                    pageContent: content,
+                    metadata: {
+                        source: filePath,
+                        filename: filename,
+                    }
+                };
+                allDocs.push(doc);
+            } catch (err) {
+                console.error(`Error processing file ${filePath}:`, err);
+            }
+
+        }
 
         // Chunk the text from the PDF
         const textSplitter = new RecursiveCharacterTextSplitter({
             chunkSize: 400,
             chunkOverlap: 20,
         });
-        const docs = await textSplitter.splitDocuments(data);
-        console.log(`Successfully chunked the PDF into ${docs.length} documents.`);
+        const docs = await textSplitter.splitDocuments(allDocs);
+        console.log(`Successfully chunked the links into ${docs.length} documents.`);
 
         // Connect to your Atlas cluster
         await client.connect();
@@ -50,8 +75,8 @@ async function run() {
         const options = { ordered: false };
 
         // Insert documents with embeddings into Atlas
-        const result = await collection.insertMany(insertDocuments, options);  
-        console.log("Count of documents inserted: " + result.insertedCount); 
+        const result = await collection.insertMany(insertDocuments, options);
+        console.log("Count of documents inserted: " + result.insertedCount);
 
     } catch (err) {
         console.log(err.stack);

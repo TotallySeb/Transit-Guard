@@ -1,5 +1,4 @@
-// models/Report.js
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const replySchema = new mongoose.Schema({
   user: { type: String, default: 'Anonymous' },
@@ -30,4 +29,4 @@ const reportSchema = new mongoose.Schema({
 
 const Report = mongoose.model('Report', reportSchema);
 
-export default Report;
+module.exports = Report;

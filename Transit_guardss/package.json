@@ -1,7 +1,6 @@
 {
   "name": "transit-guard",
   "version": "1.0.0",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,13 +11,21 @@
   "dependencies": {
     "@google/genai": "^1.11.0",
     "@google/generative-ai": "^0.24.1",
+    "@langchain/community": "^0.3.49",
+    "@langchain/core": "^0.3.66",
+    "@xenova/transformers": "^2.17.2",
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "langchain": "^0.3.30",
+    "mongodb": "^6.18.0",
     "mongoose": "^8.16.4",
     "multer": "^2.0.2",
     "ngrok": "^5.0.0-beta.2",
     "node-fetch": "^2.7.0",
-    "nodemailer": "^7.0.5"
+    "nodemailer": "^7.0.5",
+    "voyageai": "^0.0.5"
   }
 }

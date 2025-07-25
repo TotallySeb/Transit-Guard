@@ -1,14 +1,15 @@
-// index.js
-import dotenv from 'dotenv';
+// index.js (CommonJS version)
+
+const dotenv = require('dotenv');
 dotenv.config();
 
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-import reportsRoute from './routes/Reports.js';
-import stationsRoute from './routes/stations.js';
-import chatbotRoute from './routes/chatbot.js';
+const reportsRoute = require('./routes/Reports');
+const stationsRoute = require('./routes/stations');
+const chatbotRoute = require('./routes/chatbot');
 
 const app = express();
 const PORT = 3000;
@@ -19,7 +20,7 @@ console.log('Database Name:', process.env.MONGODB_DB);
 console.log('Collection Name:', process.env.MONGODB_COLLECTION);
 
 // Connect to MongoDB Atlas using the URI from .env
-const uri = process.env.MONGODB_URI;
+const uri = process.env.ATLAS_CONNECTION_STRING;
 mongoose.connect(uri)
   .then(() => console.log('✅ Connected to MongoDB Atlas!'))
   .catch(err => console.error('❌ Error connecting to MongoDB Atlas:', err));

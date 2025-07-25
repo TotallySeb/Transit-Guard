@@ -1,4 +1,4 @@
-// metroData.js - Metro station data
+// metroData.js - Metro station data (CommonJS version)
 // This file exports an array of metro stations with their names, lines, and coordinates
 
 const stations = [
@@ -43,7 +43,6 @@ const stations = [
   { name: "Irwindale", line: "A Line", lat: 34.1282, lng: -117.9357 },
   { name: "Azusa Downtown", line: "A Line", lat: 34.1339, lng: -117.9076 },
   { name: "APU/Citrus College", line: "A Line", lat: 34.1342, lng: -117.8892 },
-
   // === B Line (Red Line) ===
   { name: "Union Station", line: "B Line", lat: 34.0560, lng: -118.2365 },
   { name: "Civic Center/Grand Park", line: "B Line", lat: 34.0537, lng: -118.2468 },
@@ -59,7 +58,6 @@ const stations = [
   { name: "Hollywood/Highland", line: "B Line", lat: 34.1016, lng: -118.3387 },
   { name: "Universal City/Studio City", line: "B Line", lat: 34.1390, lng: -118.3617 },
   { name: "North Hollywood", line: "B Line", lat: 34.1683, lng: -118.3760 },
-
   // === C Line (Green Line) ===
   { name: "Redondo Beach", line: "C Line", lat: 33.8681, lng: -118.3700 },
   { name: "Douglas", line: "C Line", lat: 33.9160, lng: -118.3834 },
@@ -75,7 +73,6 @@ const stations = [
   { name: "Long Beach Blvd", line: "C Line", lat: 33.9056, lng: -118.2120 },
   { name: "Lakewood Blvd", line: "C Line", lat: 33.9165, lng: -118.1411 },
   { name: "Norwalk", line: "C Line", lat: 33.9169, lng: -118.0839 },
-
   // === D Line (Purple Line) ===
   { name: "Union Station", line: "D Line", lat: 34.0560, lng: -118.2365 },
   { name: "Civic Center/Grand Park", line: "D Line", lat: 34.0537, lng: -118.2468 },
@@ -85,7 +82,6 @@ const stations = [
   { name: "Wilshire/Vermont", line: "D Line", lat: 34.0618, lng: -118.2915 },
   { name: "Wilshire/Normandie", line: "D Line", lat: 34.0615, lng: -118.3090 },
   { name: "Wilshire/Western", line: "D Line", lat: 34.0617, lng: -118.3088 },
-
   // === E Line (Expo Line) ===
   { name: "Downtown Santa Monica", line: "E Line", lat: 34.0141, lng: -118.4912 },
   { name: "17th St/SMC", line: "E Line", lat: 34.0230, lng: -118.4815 },
@@ -107,4 +103,4 @@ const stations = [
   { name: "7th Street/Metro Center", line: "E Line", lat: 34.0486, lng: -118.2585 }
 ];
 
-export default stations;
+module.exports = stations;

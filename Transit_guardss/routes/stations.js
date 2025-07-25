@@ -1,5 +1,4 @@
-// routes/stations.js
-import express from 'express';
+const express = require('express');
 
 const router = express.Router();
 
@@ -115,4 +114,4 @@ router.get('/', (req, res) => {
   res.json(stations);
 });
 
-export default router;
+module.exports = router;

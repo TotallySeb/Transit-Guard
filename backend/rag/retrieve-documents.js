@@ -23,7 +23,7 @@ async function getQueryResults(query) {
                     queryVector: queryEmbedding,
                     path: "embedding",
                     exact: true,
-                    limit: 5
+                    limit: 9
                 }
             },
             {

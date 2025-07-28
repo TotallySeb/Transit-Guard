@@ -16,7 +16,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 // IMPORTANT: Replace this with your actual backend URL.
 // Ensure your ngrok tunnel is running and updated if the URL changes!
-const BACKEND_BASE_URL = 'https://979baad4ac97.ngrok-free.app'; // <--- VERIFY THIS URL AND UPDATE IF NGROK CHANGES!
+const BACKEND_BASE_URL = 'https://206b7e5a09a4.ngrok-free.app'; // <--- VERIFY THIS URL AND UPDATE IF NGROK CHANGES!
 
 // TypeScript types for chat messages
 type ChatMessage = {

@@ -6,17 +6,39 @@ const Chat = require('../models/chat');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const {getQueryResults} = require('../rag/retrieve-documents.js'); // Updated to CommonJS import
+
 const router = express.Router();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 router.post('/', async (req, res) => {
   try {
     const { message, history } = req.body;
+
+    // Validate input
     if (!message) return res.status(400).json({ error: 'Message is required' });
+
+        // Specify search query and retrieve relevant documents
+        const query = "Metro safety tips"; // Example query
+        const documents = await getQueryResults(query);
+
+        // Build a string representation of the retrieved documents to use in the prompt
+        let textDocuments = "";
+        documents.forEach(doc => {
+            textDocuments += doc.document.pageContent;
+        });
+        const question = message;
+
+        
+        // Create a prompt consisting of the question and context to pass to the LLM
+        const prompt = `Answer the following question based on the given context.
+            Question: {${question}}
+            Context: {${textDocuments}}
+        `;
 
     // Prepare contents for Gemini API, including history if available
     const contents = history || [];
-    contents.push({ role: 'user', parts: [{ text: message }] }); // Add the current user message
+    contents.push({ role: 'user', parts: [{ text: prompt }] }); // Add the current user message
 
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
@@ -36,7 +58,7 @@ router.post('/', async (req, res) => {
       systemInstruction: systemInstruction,
     });
 
-    const result = await chat.sendMessage(message);
+    const result = await chat.sendMessage(prompt);
     const aiReplyText = result.response.text();
 
     // Update history with the AI's response for the next turn

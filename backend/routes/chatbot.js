@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
     if (!message) return res.status(400).json({ error: 'Message is required' });
 
         // Specify search query and retrieve relevant documents
-        const query = "Metro safety tips"; // Example query
+        const query = message; // Example query
         const documents = await getQueryResults(query);
 
         // Build a string representation of the retrieved documents to use in the prompt

@@ -4,7 +4,7 @@ const { getQueryResults } = require('./retrieve-documents.js'); // Updated to Co
 
 async function run() {
     try {
-        const query = "AI Technology";
+        const query = "Metro safety tips"; // Example query
         const documents = await getQueryResults(query);
 
         documents.forEach( doc => {

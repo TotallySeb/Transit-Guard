@@ -29,7 +29,7 @@ async function run() {
             try {
                 const filename = path.basename(filePath);
                 console.log(`Processing file: ${filename}`);
-                const content = fs.readFileSync(filename, 'utf8');
+                const content = fs.readFileSync(filePath, 'utf8');
                 const doc = {
                     pageContent: content,
                     metadata: {

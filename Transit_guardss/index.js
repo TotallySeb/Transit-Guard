@@ -12,12 +12,13 @@ const stationsRoute = require('./routes/stations');
 const chatbotRoute = require('./routes/chatbot');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Use PORT from .env or default to 3000
 const HOST = '0.0.0.0'; // Allow network connections
 
 // Log env vars to confirm they're loaded
 console.log('Database Name:', process.env.MONGODB_DB);
 console.log('Collection Name:', process.env.MONGODB_COLLECTION);
+console.log('Server Port:', PORT);
 
 // Connect to MongoDB Atlas using the URI from .env
 const uri = process.env.ATLAS_CONNECTION_STRING;
@@ -44,11 +45,13 @@ app.use((req, res) => {
 
 // Global JSON error handler
 app.use((err, req, res, next) => {
-  console.error('🔥 Uncaught server error:', err.stack);
-  res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
+  console.error(err.stack); // Log the error stack for debugging
+  res.status(500).json({ error: 'Something went wrong!', details: err.message });
 });
 
 // Start the server
 app.listen(PORT, HOST, () => {
-  console.log(`🚀 Server running on http://${HOST}:${PORT}`);
+  console.log(`Server running on http://${HOST}:${PORT}`);
 });
+
+module.exports = app; // Export app for testing or other uses

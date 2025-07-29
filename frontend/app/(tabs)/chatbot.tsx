@@ -13,10 +13,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import Markdown from 'react-native-markdown-display';
+
 
 // IMPORTANT: Replace this with your actual backend URL.
 // Ensure your ngrok tunnel is running and updated if the URL changes!
-const BACKEND_BASE_URL = 'https://206b7e5a09a4.ngrok-free.app'; // <--- VERIFY THIS URL AND UPDATE IF NGROK CHANGES!
+const BACKEND_BASE_URL = 'https://afc80649b624.ngrok-free.app'; // <--- VERIFY THIS URL AND UPDATE IF NGROK CHANGES!
 
 // TypeScript types for chat messages
 type ChatMessage = {
@@ -64,8 +66,8 @@ export default function ChatbotScreen() {
       // Check if the very first message in the *conversation history* is our initial AI greeting.
       // If so, we slice the array to start from the actual user's first input.
       if (conversationHistory.length > 0 &&
-          conversationHistory[0].role === 'model' &&
-          conversationHistory[0].parts[0].text.includes("Hello! I'm your Metro Transit Guard AI.")) {
+        conversationHistory[0].role === 'model' &&
+        conversationHistory[0].parts[0].text.includes("Hello! I'm your Metro Transit Guard AI.")) {
 
         // This is the initial AI greeting from the UI. Exclude it from Gemini's history.
         // The actual user message (newUserMessage) will now be the first entry in historyToSend.
@@ -110,8 +112,8 @@ export default function ChatbotScreen() {
 
       // FIX APPLIED HERE: Only append the AI's response to the existing messages
       setMessages(prevMessages => [
-          ...prevMessages,
-          { role: 'model', parts: [{ text: aiReplyText }] }
+        ...prevMessages,
+        { role: 'model', parts: [{ text: aiReplyText }] }
       ]);
 
     } catch (error: any) {
@@ -154,9 +156,18 @@ export default function ChatbotScreen() {
                   msg.role === 'system' && styles.systemBubble, // Style for error messages
                 ]}
               >
-                <Text style={msg.role === 'system' ? styles.systemText : styles.messageText}>
+                <Markdown style={{
+                  text: { color: '#fff' },
+                  bullet_list_icon: {
+                    width: 12,           // Make the dot wider
+                    height: 12,          // Make the dot taller
+                    borderRadius: 6,     // Make it round
+                    backgroundColor: '#fff', // Make the dot white
+                    marginRight: 8,      // Space between dot and text
+                  },
+                }}>
                   {msg.parts[0].text}
-                </Text>
+                </Markdown>
               </View>
             ))}
             {loading && (

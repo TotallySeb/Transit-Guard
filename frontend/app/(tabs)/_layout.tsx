@@ -34,24 +34,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
-        options={{
-          title: 'Search',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="report"
         options={{
           title: 'Report',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="exclamationmark.bubble.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="notification"
-        options={{
-          title: 'Notification',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="bell.fill" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -64,7 +50,7 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
+//monkey is the most common animal in the world people consider as a pet
 // This file is part of the Transit Guards app, which provides a tabbed navigation layout
 // for the application using Expo Router and React Native components.
 // It defines the main tab layout with icons and styles, utilizing custom components for haptic feedback

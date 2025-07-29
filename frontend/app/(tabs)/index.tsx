@@ -68,7 +68,7 @@ const lineColors: { [line: string]: string } = {
 
 const metroLinesOrder = ['A', 'B', 'C', 'D', 'E'];
 
-const BACKEND_BASE_URL = 'https://206b7e5a09a4.ngrok-free.app';
+const BACKEND_BASE_URL = 'https://afc80649b624.ngrok-free.app';
 
 export default function HomeScreen() {
   const [stations, setStations] = useState<Station[]>([]);
@@ -266,7 +266,7 @@ export default function HomeScreen() {
                   >
                     <Text style={{ color: '#fff', fontWeight: 'bold' }}>{station.name}</Text>
                     {filteredReports
-                      .filter(report => report.stationName === station.name)
+                      .filter(report => report.stationName?.trim().toLowerCase() === station.name.trim().toLowerCase())
                       .map(report => (
                         <View
                           key={report._id}

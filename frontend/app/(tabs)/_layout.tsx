@@ -14,16 +14,22 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        // MODIFICATION START
+        // Set the active and inactive icon colors for better contrast on a dark background
+        tabBarActiveTintColor: '#fff',
+        tabBarInactiveTintColor: '#888', // A light gray for inactive icons
+        // MODIFICATION END
+
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        //tabBarBackground: TabBarBackground,
+        // MODIFICATION START
+        // Set the background to the dark green color from your chatbot header/messages
+        tabBarStyle: {
+          backgroundColor: '#32B568',
+          position: 'absolute',
+        },
+        // MODIFICATION END
       }}
     >
       <Tabs.Screen
@@ -50,7 +56,6 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-//monkey is the most common animal in the world people consider as a pet
 // This file is part of the Transit Guards app, which provides a tabbed navigation layout
 // for the application using Expo Router and React Native components.
 // It defines the main tab layout with icons and styles, utilizing custom components for haptic feedback

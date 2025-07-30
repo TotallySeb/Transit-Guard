@@ -18,7 +18,7 @@ import Markdown from 'react-native-markdown-display';
 
 // IMPORTANT: Replace this with your actual backend URL.
 // Ensure your ngrok tunnel is running and updated if the URL changes!
-const BACKEND_BASE_URL = 'https://afc80649b624.ngrok-free.app'; // <--- VERIFY THIS URL AND UPDATE IF NGROK CHANGES!
+const BACKEND_BASE_URL = 'https://3d258ea8e584.ngrok-free.app'; // <--- VERIFY THIS URL AND UPDATE IF NGROK CHANGES!
 
 // TypeScript types for chat messages
 type ChatMessage = {
@@ -157,7 +157,7 @@ export default function ChatbotScreen() {
                 ]}
               >
                 <Markdown style={{
-                  text: { color: '#fff' },
+                  text: { color: '#fff', fontSize: 16 },
                   bullet_list_icon: {
                     width: 12,           // Make the dot wider
                     height: 12,          // Make the dot taller
@@ -165,6 +165,7 @@ export default function ChatbotScreen() {
                     backgroundColor: '#fff', // Make the dot white
                     marginRight: 8,      // Space between dot and text
                   },
+                  list_item: { marginBottom: 4 }, // Space between list items
                 }}>
                   {msg.parts[0].text}
                 </Markdown>
@@ -184,7 +185,7 @@ export default function ChatbotScreen() {
               value={inputText}
               onChangeText={setInputText}
               placeholder="Type your message..."
-              placeholderTextColor="#999"
+              placeholderTextColor="#fff"
               onSubmitEditing={sendMessage}
               returnKeyType="send"
               blurOnSubmit={false}
@@ -207,11 +208,11 @@ export default function ChatbotScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#32B568',
   },
   header: {
-    padding: 15,
-    backgroundColor: '#333',
+    padding: 14,
+    backgroundColor: '#32B568',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -222,7 +223,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#2A9958',
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -231,42 +232,42 @@ const styles = StyleSheet.create({
   messagesContainer: {
     flex: 1,
     paddingHorizontal: 10,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#96D9B2',
   },
   messagesContentContainer: {
     paddingVertical: 10,
   },
   messageBubble: {
-    padding: 12,
+    padding: 9,
     borderRadius: 15,
     marginVertical: 5,
     maxWidth: '80%',
   },
   userBubble: {
     alignSelf: 'flex-end',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#6BB7D9',
   },
   aiBubble: {
     alignSelf: 'flex-start',
-    backgroundColor: '#444',
+    backgroundColor: '#32B568',
   },
   systemBubble: {
     alignSelf: 'center',
-    backgroundColor: '#FFD700',
-    paddingHorizontal: 15,
+    backgroundColor: '#050503ff',
+    paddingHorizontal: 5,
   },
   messageText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 17,
   },
   systemText: {
-    color: '#333',
-    fontSize: 14,
+    color: '#000',
+    fontSize: 17,
     fontWeight: 'bold',
   },
   loadingBubble: {
     alignSelf: 'flex-start',
-    backgroundColor: '#444',
+    backgroundColor: '#32B568',
     padding: 12,
     borderRadius: 15,
     marginVertical: 5,
@@ -279,28 +280,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-    backgroundColor: '#1a1a1a',
-    height: 70,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15, // A little more horizontal padding
+    paddingVertical: 10,
+    // The goal image has a dark background behind the input,
+    // which matches your current `safeArea` background.
+    backgroundColor: '#2A9958',
   },
   textInput: {
     flex: 1,
-    backgroundColor: '#222',
+    backgroundColor: '#32B568',
     color: '#fff',
-    padding: 10,
+    padding: 15,
     borderRadius: 20,
+    marginBottom: -15, // Adjusted to match the goal image
     marginRight: 10,
     fontSize: 16,
   },
   sendButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#6BB7D9',
     borderRadius: 20,
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingHorizontal: 15,
+    marginBottom: -15, // Adjusted to match the goal image
     justifyContent: 'center',
     alignItems: 'center',
   },

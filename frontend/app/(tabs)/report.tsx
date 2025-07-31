@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   Alert,
   TouchableOpacity,
   ScrollView,
@@ -12,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  Linking,
 } from 'react-native';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
@@ -22,7 +22,7 @@ const threatLevels = ['Low', 'Medium', 'High'];
 
 type MediaItem = {
   uri: string;
-  type: string; // image type string
+  type: string;
 };
 
 export default function ReportScreen() {
@@ -34,6 +34,38 @@ export default function ReportScreen() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [media, setMedia] = useState<MediaItem[]>([]);
+
+  // FUN FACTS AND STATE
+  const funFacts = [
+    // LA Metro Facts
+    "Did you know? The Los Angeles Metro Rail system began service in 1990 with the Blue Line (now the A Line).",
+    "Fun fact: The A Line is the busiest light rail line in the U.S. by ridership.",
+    "Did you know? The B Line (formerly the Red Line) is LA Metro’s first subway line.",
+    "Fun fact: Union Station is the largest railroad passenger terminal in the western U.S.",
+    "Did you know? The E Line runs from East LA to Santa Monica — coast to coast travel!",
+    "Fun fact: The LA Metro operates over 90 stations across 6 rail lines.",
+    "Did you know? The D Line (formerly the Purple Line) serves Koreatown and Wilshire.",
+    "Fun fact: Tap cards can be used across trains and buses throughout LA County.",
+    "Did you know? LA Metro is expanding with the Westside Purple Line Extension Project.",
+    "Fun fact: Some LA Metro stations feature public art by local artists.",
+    "Did you know? The K Line connects Crenshaw and Inglewood to the Metro system.",
+    "Fun fact: The C Line connects Norwalk to Redondo Beach — great for beach trips!",
+
+    // Safety Tips
+    "Safety tip: Always stay behind the yellow line while waiting for a train.",
+    "Safety tip: If you see something suspicious, notify Metro staff or call 888-950-SAFE.",
+    "Safety tip: Use the Metro Transit Watch app to report incidents anonymously.",
+    "Safety tip: Keep your phone and valuables out of sight while onboard.",
+    "Safety tip: Don’t block train doors — let passengers exit before boarding.",
+    "Safety tip: Avoid engaging with aggressive individuals — notify Metro personnel instead.",
+    "Safety tip: Stand clear of the platform edge when trains approach.",
+    "Safety tip: Never run across the tracks — use designated crossings.",
+    "Safety tip: Travel in well-lit, populated train cars when possible.",
+    "Safety tip: Familiarize yourself with emergency buttons and intercoms on trains.",
+    "Safety tip: Headphones are great, but keep the volume low to stay aware of your surroundings.",
+  ];
+
+  const [funFactIndex, setFunFactIndex] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -80,7 +112,6 @@ export default function ReportScreen() {
     }
 
     const formData = new FormData();
-
     formData.append('category', category);
     formData.append('content', details);
     formData.append('threatLevel', threatLevel);
@@ -91,7 +122,6 @@ export default function ReportScreen() {
 
     media.forEach((item, index) => {
       const fileName = item.uri.split('/').pop() || `image${index}.jpg`;
-
       formData.append('media', {
         uri: item.uri,
         name: fileName,
@@ -102,7 +132,7 @@ export default function ReportScreen() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://3d258ea8e584.ngrok-free.app/reports', {
+      const response = await fetch('https://9c32a20176d7.ngrok-free.app/reports', {
         method: 'POST',
         body: formData,
       });
@@ -128,6 +158,15 @@ export default function ReportScreen() {
     setErrorMsg('');
     setMedia([]);
 
+    // Pick a new random fun fact index different from current
+    setFunFactIndex((prevIndex) => {
+      let nextIndex;
+      do {
+        nextIndex = Math.floor(Math.random() * funFacts.length);
+      } while (nextIndex === prevIndex && funFacts.length > 1);
+      return nextIndex;
+    });
+
     try {
       const loc = await Location.getCurrentPositionAsync({});
       setLocation({ lat: loc.coords.latitude, lng: loc.coords.longitude });
@@ -136,95 +175,91 @@ export default function ReportScreen() {
     }
   };
 
-  if (submitted) {
+ // THANK YOU / SUBMITTED SCREEN
+if (submitted) {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        {/* Empty green header */}
-        <View style={styles.header} />
+        <SafeAreaView style={styles.safeArea}>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>Report Page</Text>
+            </View>
+            <View style={styles.submittedContainer}>
+                {/* 1. New text link above pop up and fun fact */}
+                <TouchableOpacity
+                    onPress={() =>
+                        Linking.openURL('https://docs.google.com/forms/d/e/1FAIpQLSfD-YourFormID/viewform')
+                    }
+                    accessible
+                    accessibilityRole="link"
+                    style={styles.surveyLinkContainer}
+                >
+                    <Text style={styles.surveyLinkText}>
+                      Want to contribute to our App?
+                    </Text>
+                      <Text style={styles.surveyLinkText}> 
+                        Tap here!
+                      </Text>
+                </TouchableOpacity>
 
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-          <Text style={{ fontSize: 18, marginBottom: 20, color: 'white', textAlign: 'center' }}>
-            ✅ Thank you! Your report was submitted.
-          </Text>
-          <Button title="Submit Another Report" onPress={handleNewReport} />
-        </View>
-      </SafeAreaView>
+                {/* 2. The pop up itself */}
+                <View style={styles.submittedBackground}>
+                    <Text style={styles.submittedText}>Thank you! Your report was submitted.</Text>
+                    <Text style={styles.submittedText}>✅</Text>
+                    <TouchableOpacity style={styles.submitButton} onPress={handleNewReport}>
+                        <Text style={styles.submitButtonText}>Submit Another Report</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* 3. The fun fact below the pop up */}
+                <Text style={styles.funFactText}>{funFacts[funFactIndex]}</Text>
+            </View>
+        </SafeAreaView>
     );
-  }
+}
 
+  // MAIN FORM SCREEN
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Empty green header */}
-      <View style={styles.header} />
-
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Report Page</Text>
+      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}
+        style={styles.keyboardAvoidingView}
       >
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            padding: 20,
-            paddingTop: 0,
-            justifyContent: 'space-between',
-            paddingBottom: 100,
-          }}
-        >
-          <View style={{ marginTop: 60 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: 'white', textAlign: 'center' }}>
-              Issue Category
-            </Text>
-            {categories.map(cat => (
-              <TouchableOpacity
-                key={cat}
-                onPress={() => {
-                  setCategory(prev => (prev === cat ? '' : cat));
-                }}
-                style={{
-                  padding: 12,
-                  borderWidth: 1,
-                  borderColor: category === cat ? '#007AFF' : '#ccc',
-                  borderRadius: 8,
-                  marginBottom: 8,
-                  backgroundColor: category === cat ? '#E0F0FF' : 'white',
-                }}
-              >
-                <Text style={{ textAlign: 'center' }}>{cat}</Text>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.formContainer}>
+            <View style={styles.textBackground}>
+              <Text style={styles.sectionTitle}>Issue Category</Text>
+              {categories.map(cat => (
+                <TouchableOpacity
+                  key={cat}
+                  onPress={() => setCategory(prev => (prev === cat ? '' : cat))}
+                  style={[styles.optionButton, category === cat && styles.optionButtonSelected]}
+                >
+                  <Text style={styles.optionText}>{cat}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={styles.textBackground}>
+              <Text style={styles.sectionTitle}>Attach Images (optional)</Text>
+              <TouchableOpacity style={styles.submitButton} onPress={pickMedia}>
+                <Text style={styles.submitButtonText}>Pick Images</Text>
               </TouchableOpacity>
-            ))}
-
-            <View style={{ marginVertical: 16 }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white', marginBottom: 8, textAlign: 'center' }}>
-                Attach Images (optional)
-              </Text>
-              <Button title="Pick Images" onPress={pickMedia} />
-
               {media.length > 0 && (
                 <FlatList
                   data={media}
                   horizontal
                   keyExtractor={(_, idx) => idx.toString()}
-                  style={{ marginTop: 10 }}
+                  style={styles.mediaList}
                   renderItem={({ item, index }) => (
-                    <View style={{ marginRight: 12, position: 'relative' }}>
-                      <Image
-                        source={{ uri: item.uri }}
-                        style={{ width: 120, height: 90, borderRadius: 8 }}
-                        resizeMode="cover"
-                      />
+                    <View style={styles.mediaItemWrapper}>
+                      <Image source={{ uri: item.uri }} style={styles.mediaImage} />
                       <TouchableOpacity
                         onPress={() => removeMediaItem(index)}
-                        style={{
-                          position: 'absolute',
-                          top: 4,
-                          right: 4,
-                          backgroundColor: 'rgba(0,0,0,0.6)',
-                          borderRadius: 12,
-                          paddingHorizontal: 6,
-                          paddingVertical: 2,
-                        }}
+                        style={styles.removeMediaButton}
                       >
-                        <Text style={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>X</Text>
+                        <Text style={styles.removeMediaText}>X</Text>
                       </TouchableOpacity>
                     </View>
                   )}
@@ -232,57 +267,39 @@ export default function ReportScreen() {
               )}
             </View>
 
-            <Text style={{ fontSize: 16, marginTop: 16, marginBottom: 6, color: 'white', textAlign: 'center' }}>
-              Describe the issue in detail
-            </Text>
-            <TextInput
-              value={details}
-              onChangeText={setDetails}
-              placeholder="Describe the issue in detail..."
-              multiline
-              placeholderTextColor="#999"
-              style={{
-                borderWidth: 1,
-                borderColor: '#ccc',
-                borderRadius: 8,
-                padding: 12,
-                minHeight: 100,
-                textAlignVertical: 'top',
-                backgroundColor: 'white',
-                textAlign: 'center',
-              }}
-            />
+            <View style={styles.textBackground}>
+              <Text style={styles.inputLabel}>Describe the issue in detail</Text>
+              <TextInput
+                value={details}
+                onChangeText={setDetails}
+                placeholder="Describe the issue in detail..."
+                multiline
+                placeholderTextColor="#ffffff"
+                style={styles.detailsInput}
+              />
+            </View>
 
-            <Text style={{ fontSize: 16, marginTop: 16, marginBottom: 6, color: 'white', textAlign: 'center' }}>
-              Threat Level
-            </Text>
-            {threatLevels.map(level => (
-              <TouchableOpacity
-                key={level}
-                onPress={() => {
-                  setThreatLevel(prev => (prev === level ? '' : level));
-                }}
-                style={{
-                  padding: 10,
-                  borderWidth: 1,
-                  borderColor: threatLevel === level ? '#FF3B30' : '#ccc',
-                  borderRadius: 8,
-                  marginBottom: 6,
-                  backgroundColor: threatLevel === level ? '#FFECEC' : 'white',
-                }}
-              >
-                <Text style={{ textAlign: 'center' }}>{level}</Text>
-              </TouchableOpacity>
-            ))}
+            <View style={styles.textBackground}>
+              <Text style={styles.inputLabel}>Threat Level</Text>
+              {threatLevels.map(level => (
+                <TouchableOpacity
+                  key={level}
+                  onPress={() => setThreatLevel(prev => (prev === level ? '' : level))}
+                  style={[styles.optionButton, threatLevel === level && styles.threatLevelSelected]}
+                >
+                  <Text style={styles.optionText}>{level}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
 
-            {errorMsg ? <Text style={{ color: 'red', marginTop: 10, textAlign: 'center' }}>{errorMsg}</Text> : null}
+            {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
+
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} disabled={loading}>
+              <Text style={styles.submitButtonText}>
+                {loading ? 'Submitting...' : 'Submit Report'}
+              </Text>
+            </TouchableOpacity>
           </View>
-
-          <Button
-            title={loading ? 'Submitting...' : 'Submit Report'}
-            onPress={handleSubmit}
-            disabled={loading}
-          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -292,15 +309,193 @@ export default function ReportScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#32B568',
   },
   header: {
-    backgroundColor: '#54C571',
-    height: 60,
-    width: '100%',
+    padding: 14,
+    backgroundColor: '#32B568',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  keyboardAvoidingView: {
+    flex: 1,
+    backgroundColor: '#96D9B2',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    padding: 15,
+    paddingTop: 1,
+    justifyContent: 'space-between',
+    paddingBottom: 70,
+  },
+  formContainer: {
+    marginTop: 20,
+  },
+  textBackground: {
+    backgroundColor: '#41816cff',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 14,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  optionButton: {
+    padding: 12,
+    borderWidth: 3,
+    borderColor: '#398159ff',
+    borderRadius: 8,
+    marginBottom: 8,
+    backgroundColor: '#32B568',
+  },
+  optionButtonSelected: {
+    backgroundColor: '#2AA588',
+    borderColor: '#1c6063ff',
+    borderWidth: 3,
+    padding: 12,
+  },
+  optionText: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  attachSection: {
+    marginVertical: 16,
+  },
+  mediaList: {
+    marginTop: 10,
+  },
+  mediaItemWrapper: {
+    marginRight: 12,
+    position: 'relative',
+  },
+  mediaImage: {
+    width: 200,
+    height: 355,
+    borderRadius: 12,
+    resizeMode: 'contain',
+  },
+  removeMediaButton: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    zIndex: 1000,
+    top: 4,
+    right: 4,
+    backgroundColor: '#ff0000ff',
+    borderRadius: 12,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  removeMediaText: {
+    color: '#000',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  inputLabel: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 14,
+    marginTop: 14,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  detailsInput: {
+    borderWidth: 4,
+    borderColor: '#5ea0beff',
+    borderRadius: 8,
+    padding: 12,
+    minHeight: 100,
+    textAlignVertical: 'top',
+    backgroundColor: '#6BB7D9',
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  threatLevelSelected: {
+    backgroundColor: '#4B6F44',
+    borderColor: '#631c1cff',
+    padding: 12,
+    borderWidth: 3,
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  submittedContainer: {
+    flex: 1,
+    backgroundColor: '#96D9B2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  submittedBackground: {
+    backgroundColor: '#41816cff',
+    padding: 40,
+    borderRadius: 15,
+    alignItems: 'center',
+    marginTop: '-15%',
+    borderColor: '#ffffffff',
+    borderWidth: 3,
+  },
+  submittedText: {
+    fontSize: 40,
+    marginBottom: 25,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  submitButton: {
+    width: '50%',
+    padding: 16,
+    borderWidth: 3,
+    borderColor: '#6b72d9ff',
+    borderRadius: 8,
+    backgroundColor: '#6BB7D9',
+    alignItems: 'center',
+    marginTop: 16,
+    alignSelf: 'center',
+  },
+  submitButtonText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  funFactText: {
+    marginTop: 5,
+    fontSize: 18,
+    color: '#fff',
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingHorizontal: 10,
+  },
+surveyLinkContainer: {
+    backgroundColor: '#32B568', 
+    paddingVertical: 10,
+    paddingHorizontal: 50,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#ffffffff',
+    marginTop: -50,
+    marginBottom: 70,
+    alignSelf: 'center',
+},
+  surveyLinkText: {
+    color: '#ffffffff',
+    textDecorationLine: 'underline',
+    fontWeight: '600',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });

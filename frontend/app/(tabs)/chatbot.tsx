@@ -18,7 +18,7 @@ import Markdown from 'react-native-markdown-display';
 
 // IMPORTANT: Replace this with your actual backend URL.
 // Ensure your ngrok tunnel is running and updated if the URL changes!
-const BACKEND_BASE_URL = 'https://84e03591ce02.ngrok-free.app'; // <--- VERIFY THIS URL AND UPDATE IF NGROK CHANGES!
+const BACKEND_BASE_URL = 'https://3247cf4a8c59.ngrok-free.app'; // <--- VERIFY THIS URL AND UPDATE IF NGROK CHANGES!
 
 // TypeScript types for chat messages
 type ChatMessage = {
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   messagesContainer: {
     flex: 1,
     paddingHorizontal: 10,
-    backgroundColor: '#96D9B2',
+    backgroundColor: '#272727ff',
   },
   messagesContentContainer: {
     paddingVertical: 10,

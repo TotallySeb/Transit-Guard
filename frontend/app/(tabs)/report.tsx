@@ -154,7 +154,7 @@ export default function ReportScreen() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://84e03591ce02.ngrok-free.app/reports', {
+      const response = await fetch('https://3247cf4a8c59.ngrok-free.app/reports', {
         method: 'POST',
         body: formData,
       });
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     flex: 1,
-    backgroundColor: '#96D9B2',
+    backgroundColor: '#272727ff',
   },
   scrollContent: {
     flexGrow: 1,

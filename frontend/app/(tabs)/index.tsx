@@ -67,7 +67,7 @@ const lineColors: { [line: string]: string } = {
 
 const metroLinesOrder = ['A', 'B', 'C', 'D', 'E'];
 
-const BACKEND_BASE_URL = 'https://84e03591ce02.ngrok-free.app';
+const BACKEND_BASE_URL = 'https://3247cf4a8c59.ngrok-free.app';
 
 export default function HomeScreen() {
   const [stations, setStations] = useState<Station[]>([]);
@@ -265,9 +265,9 @@ export default function HomeScreen() {
               <View key={expandedLine} style={{ marginBottom: 20 }}>
                 {/* MODIFIED: Wrapped the Text component in a View for the background */}
                 <View style={{
-                  backgroundColor: '#2cc2caff', // Light gray background
+                  backgroundColor: '#32B568', // Light gray background
                   borderWidth: 4,
-                  borderColor: '#1e8186ff',
+                  borderColor: '#ffffff',
                   padding: 10,
                   borderRadius: 8,
                   marginHorizontal: 80,
@@ -300,7 +300,7 @@ export default function HomeScreen() {
                     <View
                       key={`${station.id ?? station.name}-${expandedLine}-${index}`}
                       style={{
-                        backgroundColor: '#32B568',
+                        backgroundColor: '#278d52ff',
                         padding: 10,
                         borderRadius: 6,
                         marginBottom: 8,
@@ -495,7 +495,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    backgroundColor: '#96D9B2', // background for rest of screen, different from header
+    backgroundColor: '#272727ff', // background for rest of screen, different from header
   },
   lineLettersRowAbsolute: {
     flexDirection: 'row',

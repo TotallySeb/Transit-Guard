@@ -208,7 +208,7 @@ if (submitted) {
                 {/* 1. New text link above pop up and fun fact */}
                 <TouchableOpacity
                     onPress={() =>
-                        Linking.openURL('https://docs.google.com/forms/d/e/1FAIpQLSfD-YourFormID/viewform')
+                        Linking.openURL('https://docs.google.com/forms/d/e/1FAIpQLSdnwEOG7jDuXagKkz1la1S2qUbBOdrZ_Sqnamm3u0y5GHctQQ/viewform')
                     }
                     accessible
                     accessibilityRole="link"

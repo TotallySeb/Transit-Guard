@@ -241,16 +241,13 @@ export default function HomeScreen() {
                 padding: 26,
                 borderRadius: 10,
                 marginHorizontal: 16,
-                paddingVertical: 50,
-                marginTop: 40,
+                paddingVertical: 80,
+                marginTop: 50,
               }}
             >
-              <Text style={styles.instructionText2}>Welcome!</Text>
+              <Text style={styles.instructionText1}>Welcome!</Text>
               <Text style={styles.instructionText}>
                 Please select a Metro line above to view its stations and recent reports.
-              </Text>
-              <Text style={styles.instructionText}>
-                Use the search bar to quickly find reports by keyword, category, or location.
               </Text>
               <Text style={styles.instructionText3}>
                 Feel safe,

@@ -38,31 +38,31 @@ export default function ReportScreen() {
   // FUN FACTS AND STATE
   const funFacts = [
     // LA Metro Facts
-    "Did you know? The Los Angeles Metro Rail system began service in 1990 with the Blue Line (now the A Line).",
-    "Fun fact: The A Line is the busiest light rail line in the U.S. by ridership.",
-    "Did you know? The B Line (formerly the Red Line) is LA Metro’s first subway line.",
-    "Fun fact: Union Station is the largest railroad passenger terminal in the western U.S.",
-    "Did you know? The E Line runs from East LA to Santa Monica — coast to coast travel!",
-    "Fun fact: The LA Metro operates over 90 stations across 6 rail lines.",
-    "Did you know? The D Line (formerly the Purple Line) serves Koreatown and Wilshire.",
-    "Fun fact: Tap cards can be used across trains and buses throughout LA County.",
-    "Did you know? LA Metro is expanding with the Westside Purple Line Extension Project.",
-    "Fun fact: Some LA Metro stations feature public art by local artists.",
-    "Did you know? The K Line connects Crenshaw and Inglewood to the Metro system.",
-    "Fun fact: The C Line connects Norwalk to Redondo Beach — great for beach trips!",
+"Did you know? LA Metro began service in 1990 with the Blue Line (now the A Line).",
+  "Fun fact: The A Line is the busiest light rail line in the U.S.",
+  "Did you know? The B Line was LA Metro's first subway line.",
+  "Fun fact: Union Station is the largest railroad terminal in the western U.S.",
+  "Did you know? The E Line runs from East LA to Santa Monica.",
+  "Fun fact: LA Metro has over 90 stations.",
+  "Did you know? The D Line serves Koreatown and Wilshire.",
+  "Fun fact: Tap cards are valid on all LA County trains and buses.",
+  "Did you know? LA Metro is expanding with the Purple Line Extension.",
+  "Fun fact: Some LA Metro stations feature public art.",
+  "Did you know? The K Line connects Crenshaw and Inglewood.",
+  "Fun fact: The C Line connects Norwalk to Redondo Beach.",
 
-    // Safety Tips
-    "Safety tip: Always stay behind the yellow line while waiting for a train.",
-    "Safety tip: If you see something suspicious, notify Metro staff or call 888-950-SAFE.",
-    "Safety tip: Use the Metro Transit Watch app to report incidents anonymously.",
-    "Safety tip: Keep your phone and valuables out of sight while onboard.",
-    "Safety tip: Don’t block train doors — let passengers exit before boarding.",
-    "Safety tip: Avoid engaging with aggressive individuals — notify Metro personnel instead.",
-    "Safety tip: Stand clear of the platform edge when trains approach.",
-    "Safety tip: Never run across the tracks — use designated crossings.",
-    "Safety tip: Travel in well-lit, populated train cars when possible.",
-    "Safety tip: Familiarize yourself with emergency buttons and intercoms on trains.",
-    "Safety tip: Headphones are great, but keep the volume low to stay aware of your surroundings.",
+  // Safety Tips
+  "Safety tip: Always stay behind the yellow line.",
+  "Safety tip: Report suspicious activity to Metro staff or call 888-950-SAFE.",
+  "Safety tip: Use the Transit Watch app to report anonymously.",
+  "Safety tip: Keep your valuables out of sight.",
+  "Safety tip: Let passengers exit before boarding.",
+  "Safety tip: Notify Metro personnel if you encounter aggressive individuals.",
+  "Safety tip: Stand clear of the platform edge.",
+  "Safety tip: Use designated crossings.",
+  "Safety tip: Travel in well-lit train cars.",
+  "Safety tip: Familiarize yourself with emergency buttons.",
+  "Safety tip: Keep headphone volume low to stay aware.",
   ];
 
   const [funFactIndex, setFunFactIndex] = useState(0);
@@ -89,6 +89,28 @@ export default function ReportScreen() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
+      quality: 0.5,
+    });
+
+    if (!result.canceled && result.assets?.length) {
+      const newMedia: MediaItem[] = result.assets.map(asset => ({
+        uri: asset.uri,
+        type: asset.type || 'image',
+      }));
+      setMedia(prev => [...prev, ...newMedia]);
+    }
+  };
+
+  // --- NEW FUNCTION: TAKE PHOTO ---
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera permissions to take a photo!');
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.5,
     });
 
@@ -132,7 +154,7 @@ export default function ReportScreen() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://9c32a20176d7.ngrok-free.app/reports', {
+      const response = await fetch('https://84e03591ce02.ngrok-free.app/reports', {
         method: 'POST',
         body: formData,
       });
@@ -243,9 +265,15 @@ if (submitted) {
 
             <View style={styles.textBackground}>
               <Text style={styles.sectionTitle}>Attach Images (optional)</Text>
-              <TouchableOpacity style={styles.submitButton} onPress={pickMedia}>
-                <Text style={styles.submitButtonText}>Pick Images</Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 10 }}>
+                <TouchableOpacity style={styles.submitButton} onPress={pickMedia}>
+                  <Text style={styles.submitButtonText}>Pick Images</Text>
+                </TouchableOpacity>
+                {/* NEW BUTTON FOR TAKING PHOTO */}
+                <TouchableOpacity style={styles.submitButton} onPress={takePhoto}>
+                  <Text style={styles.submitButtonText}>Take Photo</Text>
+                </TouchableOpacity>
+              </View>
               {media.length > 0 && (
                 <FlatList
                   data={media}
@@ -348,6 +376,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 14,
     color: '#fff',
+    textDecorationLine: 'underline',
     textAlign: 'center',
   },
   optionButton: {
@@ -407,6 +436,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
     color: '#fff',
     textAlign: 'center',
+    textDecorationLine: 'underline',
   },
   detailsInput: {
     borderWidth: 4,
@@ -458,7 +488,7 @@ const styles = StyleSheet.create({
     width: '50%',
     padding: 16,
     borderWidth: 3,
-    borderColor: '#6b72d9ff',
+    borderColor: '#5ea0beff',
     borderRadius: 8,
     backgroundColor: '#6BB7D9',
     alignItems: 'center',
@@ -480,8 +510,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 10,
   },
-surveyLinkContainer: {
-    backgroundColor: '#32B568', 
+  surveyLinkContainer: {
+    backgroundColor: '#32B568',
     paddingVertical: 10,
     paddingHorizontal: 50,
     borderRadius: 8,
@@ -490,7 +520,7 @@ surveyLinkContainer: {
     marginTop: -50,
     marginBottom: 70,
     alignSelf: 'center',
-},
+  },
   surveyLinkText: {
     color: '#ffffffff',
     textDecorationLine: 'underline',

@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   StyleSheet,
   ScrollView,
-  KeyboardAvoidingView,
   Platform,
   Image,
   Switch,
@@ -45,11 +44,11 @@ type Report = {
 };
 
 const categoryColors: { [key: string]: string } = {
-  Cleanliness: '#D0F0C0',
-  Safety: '#F8D7DA',
-  Performance: '#FFF3CD',
-  Accessibility: '#D1ECF1',
-  Other: '#E2E3E5',
+  Cleanliness: '#9dff0052',
+  Safety: '#ff0015a8',
+  Performance: '#7600add3',
+  Accessibility: '#12c7e76c',
+  Other: '#0343c488',
 };
 
 const threatLevelColors: { [key: string]: string } = {
@@ -68,7 +67,7 @@ const lineColors: { [line: string]: string } = {
 
 const metroLinesOrder = ['A', 'B', 'C', 'D', 'E'];
 
-const BACKEND_BASE_URL = 'https://9c32a20176d7.ngrok-free.app';
+const BACKEND_BASE_URL = 'https://84e03591ce02.ngrok-free.app';
 
 export default function HomeScreen() {
   const [stations, setStations] = useState<Station[]>([]);
@@ -122,7 +121,6 @@ export default function HomeScreen() {
 
   const lowerSearch = search.trim().toLowerCase();
 
-  // Filter reports by category, threatLevel, stationName, or content
   const filteredReports = reports.filter(report => {
     const category = report.category ?? '';
     const threatLevel = report.threatLevel ?? '';
@@ -136,7 +134,6 @@ export default function HomeScreen() {
     );
   });
 
-  // Filter stations by name or line or if any report on station matches search
   const filteredStations = stations.filter(station => {
     const stationNameMatch = station.name.toLowerCase().includes(lowerSearch);
     const lineMatch = station.line.toLowerCase().includes(lowerSearch);
@@ -145,11 +142,9 @@ export default function HomeScreen() {
       report => report.stationName === station.name
     );
 
-    // Show station if name/line matches OR if any matching report belongs here OR if search empty
     return stationNameMatch || lineMatch || hasMatchingReport || lowerSearch === '';
   });
 
-  // Group stations by line for display
   const stationsByLine: { [line: string]: Station[] } = {};
   filteredStations.forEach(station => {
     const lineKey = station.line[0];
@@ -202,220 +197,282 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={{ height: 20, backgroundColor: '#54C571' }} />
-      <View style={styles.lineLettersRow}>
-        {metroLinesOrder.map(line => (
-          <TouchableOpacity
-            key={line}
-            onPress={() => toggleExpandLine(line)}
-            style={[
-              styles.lineLetterContainer,
-              {
-                backgroundColor: lineColors[line],
-                borderColor: expandedLine === line ? '#FFF' : 'transparent',
-                borderWidth: expandedLine === line ? 2 : 0,
-              },
-            ]}
-          >
-            <Text style={styles.lineLetter}>{line}</Text>
-          </TouchableOpacity>
-        ))}
+      {/* Header - now acts as the positioning context */}
+      <View style={styles.header}>
+        {/* Line Letters Row - positioned absolutely within the header */}
+        <View style={styles.lineLettersRowAbsolute}>
+          {metroLinesOrder.map(line => (
+            <TouchableOpacity
+              key={line}
+              onPress={() => toggleExpandLine(line)}
+              style={[
+                styles.lineLetterContainer,
+                {
+                  backgroundColor: lineColors[line],
+                  borderColor: expandedLine === line ? '#FFF' : 'transparent',
+                  borderWidth: expandedLine === line ? 2 : 0,
+                },
+              ]}
+            >
+              <Text style={styles.lineLetter}>{line}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginHorizontal: 16, marginTop: 10 }}>
-        <Text style={{ color: 'white', marginRight: 8 }}>Show only recent reports</Text>
-        <Switch
-          value={recentOnly}
-          onValueChange={setRecentOnly}
-          thumbColor={recentOnly ? '#007AFF' : '#999'}
+      {/* Content Wrapper with separate background */}
+      <View style={styles.contentWrapper}>
+        {/* Search Bar remains visible always */}
+        <TextInput
+          placeholder="Search by station, line, category, threat level, or co..."
+          placeholderTextColor="#fff"
+          value={search}
+          onChangeText={setSearch}
+          style={styles.searchInput}
         />
-      </View>
 
-      <TextInput
-        placeholder="Search by station, line, category, threat level, or content..."
-        placeholderTextColor="#999"
-        value={search}
-        onChangeText={setSearch}
-        style={styles.searchInput}
-      />
-
-      {!expandedLine && (
-        <Text style={styles.instructionText}>Select a Metro line above to view stations.</Text>
-      )}
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}
-      >
-        <ScrollView contentContainerStyle={{ padding: 16 }}>
-          {expandedLine && (
-            <View key={expandedLine} style={{ marginBottom: 20 }}>
-              <Text style={{ color: lineColors[expandedLine], fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
-                {expandedLine} Line
+        {!expandedLine && (
+            // New View wrapper with background styling
+            <View
+              style={{
+                backgroundColor: '#32B568',
+                borderWidth: 4,
+                borderColor: '#298f53ff',
+                padding: 26,
+                borderRadius: 10,
+                marginHorizontal: 16,
+                paddingVertical: 50,
+                marginTop: 40,
+              }}
+            >
+              <Text style={styles.instructionText2}>Welcome!</Text>
+              <Text style={styles.instructionText}>
+                Please select a Metro line above to view its stations and recent reports.
               </Text>
-              {stationsByLine[expandedLine]?.length > 0 ? (
-                stationsByLine[expandedLine].map((station, index) => (
-                  <View
-                    key={`${station.id ?? station.name}-${expandedLine}-${index}`}
+              <Text style={styles.instructionText}>
+                Use the search bar to quickly find reports by keyword, category, or location.
+              </Text>
+              <Text style={styles.instructionText3}>
+                Feel safe,
+              </Text>
+              <Text style={styles.instructionText2}>
+                Travel Smart,
+              </Text>
+              <Text style={styles.instructionText1}>
+                With Transit Guard!
+              </Text>
+            </View>
+)}
+          <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 100 }}>
+            {expandedLine && (
+              <View key={expandedLine} style={{ marginBottom: 20 }}>
+                {/* MODIFIED: Wrapped the Text component in a View for the background */}
+                <View style={{
+                  backgroundColor: '#2cc2caff', // Light gray background
+                  borderWidth: 4,
+                  borderColor: '#1e8186ff',
+                  padding: 10,
+                  borderRadius: 8,
+                  marginHorizontal: 80,
+                  marginBottom: 8,
+                  alignItems: 'center', // Center the text horizontally
+                }}>
+                  <Text
                     style={{
-                      backgroundColor: '#222',
-                      padding: 10,
-                      borderRadius: 6,
-                      marginBottom: 8,
+                      color: lineColors[expandedLine],
+                      fontSize: 28,
+                      fontWeight: 'bold',
                     }}
                   >
-                    <Text style={{ color: '#fff', fontWeight: 'bold' }}>{station.name}</Text>
-                    {filteredReports
-                      .filter(report => report.stationName?.trim().toLowerCase() === station.name.trim().toLowerCase())
-                      .map(report => (
-                        <View
-                          key={report._id}
-                          style={{
-                            backgroundColor: categoryColors[report.category || 'Other'] || '#444',
-                            marginTop: 6,
-                            padding: 8,
-                            borderRadius: 6,
-                            position: 'relative',
-                          }}
-                        >
-                          {/* Time in top right in black */}
-                          {report.createdAt && (
-                            <Text
-                              style={{
-                                position: 'absolute',
-                                top: 8,
-                                right: 8,
-                                fontSize: 12,
-                                color: 'black',
-                                fontWeight: 'bold',
-                              }}
-                            >
-                              {new Date(report.createdAt).toLocaleTimeString(undefined, {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
-                            </Text>
-                          )}
+                    {expandedLine} Line
+                  </Text>
+                </View>
 
-                          <Text style={{ fontWeight: 'bold', fontSize: 20 }}>
-                            {report.category}
-                          </Text>
+                {/* SHOW ONLY HERE */}
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                  <Text style={{ color: 'white', fontWeight: 'bold', marginRight: 8, fontSize: 18 }}>Show only recent reports</Text>
+                  <Switch
+                    value={recentOnly}
+                    onValueChange={setRecentOnly}
+                    thumbColor={recentOnly ? '#ffffffff' : '#fff'}
+                  />
+                </View>
 
-                          {report.media && report.media.length > 0 && report.media[0].filename && (
-                            <Image
-                              source={{ uri: `${BACKEND_BASE_URL}/uploads/${report.media[0].filename}` }}
-                              style={{
-                                width: '100%',
-                                height: 200,
-                                borderRadius: 8,
-                                marginVertical: 10,
-                                resizeMode: 'contain',
-                              }}
-                            />
-                          )}
-
-                          <Text style={{ fontSize: 15, marginTop: 4 }}>
-                            {report.content}
-                          </Text>
-
-                          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
-                            <View
-                              style={{
-                                width: 14,
-                                height: 14,
-                                borderRadius: 7,
-                                backgroundColor: threatLevelColors[report.threatLevel || 'Low'] || '#FFDC00',
-                                marginRight: 8,
-                              }}
-                            />
-                            <Text style={{ fontWeight: 'bold', color: '#333' }}>
-                              Threat level: {report.threatLevel || 'Low'}
-                            </Text>
-                          </View>
-
-                          {report.createdAt && (
-                            <Text style={{ fontSize: 12, color: '#ccc', marginTop: 4 }}>
-                              {new Date(report.createdAt).toLocaleString(undefined, {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                              })}
-                            </Text>
-                          )}
-
-                          {report.replies && report.replies.length > 0 && (
-                            <View style={{ marginTop: 6 }}>
-                              <Text style={{ fontWeight: 'bold' }}>Replies:</Text>
-                              {report.replies.map((reply, idx) => (
-                                <View
-                                  key={idx}
+                {stationsByLine[expandedLine]?.length > 0 ? (
+                  stationsByLine[expandedLine].map((station, index) => (
+                    <View
+                      key={`${station.id ?? station.name}-${expandedLine}-${index}`}
+                      style={{
+                        backgroundColor: '#32B568',
+                        padding: 10,
+                        borderRadius: 6,
+                        marginBottom: 8,
+                      }}
+                    >
+                      {/* THIS IS THE LINE THAT WAS MODIFIED */}
+                      <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 24 }}>
+                        {station.name}
+                      </Text>
+                      {filteredReports
+                        .filter(report => report.stationName?.trim().toLowerCase() === station.name.trim().toLowerCase())
+                        .map(report => (
+                          <View
+                            key={report._id}
+                            style={{
+                              backgroundColor: categoryColors[report.category || 'Other'] || '#444',
+                              marginTop: 6,
+                              padding: 8,
+                              borderRadius: 6,
+                              position: 'relative',
+                            }}
+                          >
+                            {report.createdAt && (
+                              <View
+                                style={{
+                                  position: 'absolute',
+                                  top: 8,
+                                  right: 8,
+                                  alignItems: 'flex-end',
+                                }}
+                              >
+                                <Text
                                   style={{
-                                    backgroundColor: '#333',
-                                    padding: 6,
-                                    borderRadius: 4,
-                                    marginTop: 4,
+                                    fontSize: 12,
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    marginBottom: 2,
                                   }}
                                 >
-                                  <Text style={{ color: '#fff' }}>
-                                    <Text style={{ fontWeight: 'bold' }}>{reply.user}: </Text>
-                                    {reply.content}
-                                  </Text>
-                                  {reply.createdAt && (
-                                    <Text style={{ fontSize: 10, color: '#ccc' }}>
-                                      {new Date(reply.createdAt).toLocaleString(undefined, {
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                      })}
-                                    </Text>
-                                  )}
-                                </View>
-                              ))}
-                            </View>
-                          )}
+                                  {new Date(report.createdAt).toLocaleDateString(undefined, {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                  })}
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 12,
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                  }}
+                                >
+                                  {new Date(report.createdAt).toLocaleTimeString(undefined, {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                  })}
+                                </Text>
+                              </View>
+                            )}
 
-                          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
-                            <TextInput
-                              placeholder="Write a reply..."
-                              placeholderTextColor="#999"
-                              value={replyTexts[report._id] || ''}
-                              onChangeText={text =>
-                                setReplyTexts(prev => ({ ...prev, [report._id]: text }))
-                              }
-                              style={{
-                                flex: 1,
-                                backgroundColor: '#111',
-                                color: '#fff',
-                                padding: 8,
-                                borderRadius: 4,
-                              }}
-                            />
-                            <TouchableOpacity
-                              onPress={() => handlePostReply(report._id)}
-                              style={{
-                                backgroundColor: '#007AFF',
-                                paddingVertical: 8,
-                                paddingHorizontal: 12,
-                                borderRadius: 4,
-                                marginLeft: 6,
-                              }}
-                            >
-                              <Text style={{ color: '#fff', fontWeight: 'bold' }}>Post</Text>
-                            </TouchableOpacity>
+                            <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#fff' }}>
+                              {report.category}
+                            </Text>
+
+                            {report.media && report.media.length > 0 && report.media[0].filename && (
+                              <Image
+                                source={{ uri: `${BACKEND_BASE_URL}/uploads/${report.media[0].filename}` }}
+                                style={{
+                                  width: '100%',
+                                  height: 200,
+                                  borderRadius: 8,
+                                  marginVertical: 10,
+                                  resizeMode: 'contain',
+                                }}
+                              />
+                            )}
+
+                            <Text style={{ fontSize: 15, marginTop: 4 , color: '#fff' }}>
+                              {report.content}
+                            </Text>
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
+                              <View
+                                style={{
+                                  width: 19,
+                                  height: 19,
+                                  borderRadius: 12,
+                                  backgroundColor: threatLevelColors[report.threatLevel || 'Low'] || '#FFDC00',
+                                  marginRight: 8,
+                                }}
+                              />
+                              <Text style={{ fontWeight: 'bold', color: '#FFF' }}>
+                                Threat level: {report.threatLevel || 'Low'}
+                              </Text>
+                            </View>
+
+                            {report.replies && report.replies.length > 0 && (
+                              <View style={{ marginTop: 6 }}>
+                                <Text style={{ fontWeight: 'bold', color: '#FFF' }}>Replies:</Text>
+                                {report.replies.map((reply, idx) => (
+                                  <View
+                                    key={idx}
+                                    style={{
+                                      backgroundColor: '#32B568',
+                                      padding: 6,
+                                      borderRadius: 4,
+                                      marginTop: 4,
+                                    }}
+                                  >
+                                    <Text style={{ color: '#fff' }}>
+                                      <Text style={{ fontWeight: 'bold' }}>{reply.user}: </Text>
+                                      {reply.content}
+                                    </Text>
+                                    {reply.createdAt && (
+                                      <Text style={{ fontSize: 10, color: '#ccc' }}>
+                                        {new Date(reply.createdAt).toLocaleString(undefined, {
+                                          hour: '2-digit',
+                                          minute: '2-digit',
+                                          year: 'numeric',
+                                          month: 'short',
+                                          day: 'numeric',
+                                        })}
+                                      </Text>
+                                    )}
+                                  </View>
+                                ))}
+                              </View>
+                            )}
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
+                              <TextInput
+                                placeholder="Write a reply..."
+                                placeholderTextColor="#919191ff"
+                                value={replyTexts[report._id] || ''}
+                                onChangeText={text =>
+                                  setReplyTexts(prev => ({ ...prev, [report._id]: text }))
+                                }
+                                style={{
+                                  flex: 1,
+                                  backgroundColor: '#ffffff',
+                                  color: '#919191ff',
+                                  padding: 8,
+                                  borderRadius: 4
+                                }}
+                              />
+                              <TouchableOpacity
+                                onPress={() => handlePostReply(report._id)}
+                                style={{
+                                  backgroundColor: '#6BB7D9',
+                                  paddingVertical: 8,
+                                  paddingHorizontal: 12,
+                                  borderRadius: 4,
+                                  marginLeft: 6,
+                                }}
+                              >
+                                <Text style={{ color: '#fff', fontWeight: 'bold' }}>Post</Text>
+                              </TouchableOpacity>
+                            </View>
                           </View>
-                        </View>
-                      ))}
-                  </View>
-                ))
-              ) : (
-                <Text style={{ color: '#999' }}>No stations found for this line.</Text>
-              )}
-            </View>
-          )}
-        </ScrollView>
-      </KeyboardAvoidingView>
+                        ))}
+                    </View>
+                  ))
+                ) : (
+                  <Text style={{ color: '#999' }}>No stations found for this line.</Text>
+                )}
+              </View>
+            )}
+          </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -423,17 +480,38 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#32B568', // Changed from #32B568 to lighter green for main background
   },
-  lineLettersRow: {
+  header: {
+    padding: 26,
+    backgroundColor: '#32B568', // Keep header green
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative', // Crucial: makes this the positioning context for absolute children
+    paddingBottom: 40, // Increased padding to make space for the overlapping buttons
+  },
+  headerText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10, // Add some space between text and buttons
+  },
+  contentWrapper: {
+    flex: 1,
+    backgroundColor: '#96D9B2', // background for rest of screen, different from header
+  },
+  lineLettersRowAbsolute: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: 5,
     alignItems: 'center',
+    position: 'absolute', // Key: take it out of normal flow
+    width: '100%', // Make it span the width of its parent (the header)
+    bottom: 15, // Adjust this value to control how much it overlaps the header.
   },
   lineLetterContainer: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
     borderRadius: 20,
   },
   lineLetter: {
@@ -442,22 +520,51 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   searchInput: {
-    backgroundColor: '#111',
+    backgroundColor: '#6BB7D9',
     color: '#fff',
     padding: 10,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: '#1d6485ff',
     margin: 16,
   },
   instructionText: {
-    color: '#aaa',
+    color: '#ffffff',
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 20,
+    marginHorizontal: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  instructionText1: {
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 20,
+    marginHorizontal: 10,
+    fontSize: 30,
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+    fontStyle: 'italic',
+  },
+    instructionText2: {
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 20,
+    marginHorizontal: 10,
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+    instructionText3: {
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 20,
+    marginHorizontal: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
   },

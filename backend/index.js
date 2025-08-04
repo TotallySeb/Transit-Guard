@@ -37,6 +37,9 @@ app.use('/uploads', express.static('uploads'));
 app.use('/reports', reportsRoute);
 app.use('/stations', stationsRoute);
 app.use('/chatbot', chatbotRoute);
+app.get('/', (req, res) => {
+  res.send('Welcome to the Transit Guard API!');
+});
 
 // Global fallback for unhandled routes
 app.use((req, res) => {

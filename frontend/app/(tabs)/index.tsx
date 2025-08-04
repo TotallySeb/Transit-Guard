@@ -67,7 +67,7 @@ const lineColors: { [line: string]: string } = {
 
 const metroLinesOrder = ['A', 'B', 'C', 'D', 'E'];
 
-const BACKEND_BASE_URL = 'https://56084fa054d2.ngrok-free.app';
+const BACKEND_BASE_URL = 'https://transit-guard-backend.onrender.com';
 
 export default function HomeScreen() {
   const [stations, setStations] = useState<Station[]>([]);

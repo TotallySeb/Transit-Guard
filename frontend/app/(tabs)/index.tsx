@@ -67,7 +67,7 @@ const lineColors: { [line: string]: string } = {
 
 const metroLinesOrder = ['A', 'B', 'C', 'D', 'E'];
 
-const BACKEND_BASE_URL = 'https://3247cf4a8c59.ngrok-free.app';
+const BACKEND_BASE_URL = 'https://56084fa054d2.ngrok-free.app';
 
 export default function HomeScreen() {
   const [stations, setStations] = useState<Station[]>([]);

@@ -154,7 +154,7 @@ export default function ReportScreen() {
     setLoading(true);
 
     try {
-      const response = await fetch('https://3247cf4a8c59.ngrok-free.app/reports', {
+      const response = await fetch('https://56084fa054d2.ngrok-free.app/reports', {
         method: 'POST',
         body: formData,
       });
